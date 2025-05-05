@@ -5,16 +5,10 @@ date: "`r Sys.Date()`"
 output: html_document
 ---
 
-## Abbreviations
+in Baumann et al., 2017:
 
-W_P_km² = woodland pasture conversion
-C = Cropland
-W = Woodland
-P = Pasture
-
-in the paper:
-W -> forests
-P -> grazing lands
+woodland = forests
+pasture = grazing lands
 
 
 ##  Task 1
@@ -29,9 +23,9 @@ lcc_chaco <- read_csv("LCC_Chaco_Numbers_Updated.csv")
 lcc_chaco_grouped <- lcc_chaco %>% 
   group_by(Year, Ecoregion) %>% 
   summarise(
-    WL_P_km2 = sum(WL_P_km2),
-    WL_C_km2 = sum(WL_C_km2),
-    P_C_km2 = sum(P_C_km2)
+    WL_P_km2 = sum(WL_P_km2), # woodland to pasture
+    WL_C_km2 = sum(WL_C_km2), # woodland to cropland
+    P_C_km2 = sum(P_C_km2) # pasture to cropland
   )
 ```
 
@@ -39,5 +33,7 @@ lcc_chaco_grouped <- lcc_chaco %>%
 
 Implement a CBKM in R for the emissions from AGB loss. When you are done, calculate the total emissions from AGB loss for the three land-cover conversion types for the period 1986-2050. Visualize the results in a suitable way (e.g., in a line graph), and prepare this graph (a) for the entire Chaco, and (b) separated for the wet, dry, and very dry Chaco. You are welcome to provide any other visualization (e.g., the different flows for one conversion type), but you do not have to. Have a look at the paper by Baumann et al. for an idea of visualizing emissions. What are the total emissions from land-cover change, aggregated over the period 1986-2025?
 
-
-
+```{r}
+# import table from Baumann et al., 2017, p. 1906
+land2carbon <- read_csv("land2carbon.csv")
+```
