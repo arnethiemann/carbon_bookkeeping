@@ -1,0 +1,18 @@
+---
+title: "Carbon Bookkeeping"
+author: "Arne Thiemann"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+## Abbreviations
+
+W_P_km² = woodland pasture conversion
+C = Cropland
+W = Woodland
+P = Pasture
+
+in the paper:
+W -> forests
+P -> grazing lands
+
