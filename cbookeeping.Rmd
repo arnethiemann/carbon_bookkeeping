@@ -16,3 +16,28 @@ in the paper:
 W -> forests
 P -> grazing lands
 
+
+##  Task 1
+
+Prepare the table in way that you have the columns Year and Ecoregion as so-called grouping variables. Along with these variables, each of the land cover conversions should be stored in individual columns.
+
+```{r}
+library(tidyverse)
+
+lcc_chaco <- read_csv("LCC_Chaco_Numbers_Updated.csv")
+
+lcc_chaco_grouped <- lcc_chaco %>% 
+  group_by(Year, Ecoregion) %>% 
+  summarise(
+    WL_P_km2 = sum(WL_P_km2),
+    WL_C_km2 = sum(WL_C_km2),
+    P_C_km2 = sum(P_C_km2)
+  )
+```
+
+## Task 2
+
+Implement a CBKM in R for the emissions from AGB loss. When you are done, calculate the total emissions from AGB loss for the three land-cover conversion types for the period 1986-2050. Visualize the results in a suitable way (e.g., in a line graph), and prepare this graph (a) for the entire Chaco, and (b) separated for the wet, dry, and very dry Chaco. You are welcome to provide any other visualization (e.g., the different flows for one conversion type), but you do not have to. Have a look at the paper by Baumann et al. for an idea of visualizing emissions. What are the total emissions from land-cover change, aggregated over the period 1986-2025?
+
+
+
