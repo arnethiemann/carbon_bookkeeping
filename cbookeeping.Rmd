@@ -48,23 +48,60 @@ land2carbon_par <- land2carbon %>%
   )
 
 # create lookup table
-lookup_table <- crossing(from = land2carbon_par$class, to = land2carbon_par$class) %>% 
+lookup_table <- land2carbon_par %>% 
+  crossing(from = class, to = class) %>% 
   mutate(
     identifier = paste(
-      from, to, sep = "_"
+      from, to, "km2", sep = "_"
     )
+  )
+
+
+lookup_table <- crossing(
+  from = land2carbon_par$class,
+  to = land2carbon_par$class,
+  region = land2carbon_par$region) %>% 
+  mutate(
+    identifier = paste(
+      from, to, "km2", sep = "_"
+    ) %>% 
+      str_replace_all(., c("Cropland" = "C", "Forest" = "WL", "Grazing lands" = "P"))
   ) %>% 
-  #filter(to != "Forest") # conversion to forest ist not parameterized and therefore excluded
+  left_join(
+    land2carbon_par %>% select(class, region, value_mean),
+    by = c("from" = "class", "region")
+  ) %>% 
+  left_join(
+    land2carbon_par %>% select(class, region, value_mean),
+    by = c("to" = "class", "region")
+  ) %>% 
+  mutate(value_mean = value_mean.y - value_mean.x) %>% 
+  select(region, from, to, identifier, value_mean)
 
-lookup_table$c_change <- ifelse(lookup_table$from == lookup_table$to, 0, NA)
 
+# now apply the lookup
+lcc_chaco_carbon <- lcc_chaco_grouped %>% 
+  pivot_longer(
+    !c(Year, Ecoregion),
+    names_to = "change_type",
+    values_to = "km2"
+  ) %>% 
+  inner_join(
+    lookup_table,
+    by = c(
+      "Ecoregion" = "region",
+      "change_type" = "identifier"
+    )
+  )
 ```
 
 
 When you are done, calculate the total emissions from AGB loss for the three land-cover conversion types for the period 1986-2050.
 
 ```{r}
-
+lcc_chaco_carbon %>% 
+  group_by(change_type) %>% 
+  summarise(carbon_emissions = sum(value_mean))
 ```
 
 
@@ -80,6 +117,7 @@ Visualize the results in a suitable way (e.g., in a line graph), and prepare thi
 You are welcome to provide any other visualization (e.g., the different flows for one conversion type), but you do not have to. Have a look at the paper by Baumann et al. for an idea of visualizing emissions.
 
 ```{r}
+
 
 ```
 
