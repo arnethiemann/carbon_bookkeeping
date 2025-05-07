@@ -31,9 +31,67 @@ lcc_chaco_grouped <- lcc_chaco %>%
 
 ## Task 2
 
-Implement a CBKM in R for the emissions from AGB loss. When you are done, calculate the total emissions from AGB loss for the three land-cover conversion types for the period 1986-2050. Visualize the results in a suitable way (e.g., in a line graph), and prepare this graph (a) for the entire Chaco, and (b) separated for the wet, dry, and very dry Chaco. You are welcome to provide any other visualization (e.g., the different flows for one conversion type), but you do not have to. Have a look at the paper by Baumann et al. for an idea of visualizing emissions. What are the total emissions from land-cover change, aggregated over the period 1986-2025?
+Implement a CBKM in R for the emissions from AGB loss.
 
 ```{r}
 # import table from Baumann et al., 2017, p. 1906
 land2carbon <- read_csv("land2carbon.csv")
+
+# Creating three different versions, thankfully the data are quite simple, so we can work with min and max, for the IPCC parameters and the Houghton & Hackler version
+land2carbon_par <- land2carbon %>%
+  filter(variable == "Total carbon in Biomass") %>% 
+  group_by(class, region) %>% 
+  summarise(
+    value_IPCC = min(value),
+    value_HoughtonHackler = max(value),
+    value_mean = mean(value)
+  )
+
+# create lookup table
+lookup_table <- crossing(from = land2carbon_par$class, to = land2carbon_par$class) %>% 
+  mutate(
+    identifier = paste(
+      from, to, sep = "_"
+    )
+  ) %>% 
+  #filter(to != "Forest") # conversion to forest ist not parameterized and therefore excluded
+
+lookup_table$c_change <- ifelse(lookup_table$from == lookup_table$to, 0, NA)
+
+```
+
+
+When you are done, calculate the total emissions from AGB loss for the three land-cover conversion types for the period 1986-2050.
+
+```{r}
+
+```
+
+
+Visualize the results in a suitable way (e.g., in a line graph), and prepare this graph 
+(a) for the entire Chaco, and 
+(b) separated for the wet, dry, and very dry Chaco.
+
+```{r}
+
+```
+
+
+You are welcome to provide any other visualization (e.g., the different flows for one conversion type), but you do not have to. Have a look at the paper by Baumann et al. for an idea of visualizing emissions.
+
+```{r}
+
+```
+
+
+What are the total emissions from land-cover change, aggregated over the period 1986-2025?
+
+```{r}
+
+
+
+
+
+# circlized and river charts
+
 ```
