@@ -92,6 +92,9 @@ lcc_chaco_carbon <- lcc_chaco_grouped %>%
       "Ecoregion" = "region",
       "change_type" = "identifier"
     )
+  ) %>% 
+  mutate(
+    carbon_flow = km2 * value_mean # check conversion and unit! Mg C / ha
   )
 ```
 
@@ -101,7 +104,7 @@ When you are done, calculate the total emissions from AGB loss for the three lan
 ```{r}
 lcc_chaco_carbon %>% 
   group_by(change_type) %>% 
-  summarise(carbon_emissions = sum(value_mean))
+  summarise(carbon_emissions = sum(carbon_flow))
 ```
 
 
@@ -110,6 +113,26 @@ Visualize the results in a suitable way (e.g., in a line graph), and prepare thi
 (b) separated for the wet, dry, and very dry Chaco.
 
 ```{r}
+ggplot(
+  lcc_chaco_carbon,
+  aes(
+    Year,
+    carbon_flow *-1,
+    color = change_type
+  )
+) + facet_wrap(~Ecoregion) +
+  geom_line()
+
+ggplot(
+  lcc_chaco_carbon,
+  aes(
+    Year,
+    carbon_flow * -1,
+    fill = change_type
+  )
+) + facet_wrap(~Ecoregion) +
+  geom_area() +
+  theme_light()
 
 ```
 
@@ -118,18 +141,11 @@ You are welcome to provide any other visualization (e.g., the different flows fo
 
 ```{r}
 
-
 ```
 
 
 What are the total emissions from land-cover change, aggregated over the period 1986-2025?
 
 ```{r}
-
-
-
-
-
-# circlized and river charts
 
 ```
